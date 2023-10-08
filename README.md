@@ -1,4 +1,4 @@
-# Configurações para o ambiente linux
+## Configurações para rodar o docker em ambiente Linux
 
 ### Alterar necessidade de password no docker
 ``` bash
