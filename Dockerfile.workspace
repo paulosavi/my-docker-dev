@@ -1,0 +1,35 @@
+FROM php:8.1-fpm
+
+# Instalar extensões e ferramentas
+RUN apt-get update && apt-get install -y \
+    zip \
+    unzip \
+    git \
+    curl \
+    nodejs \
+    npm \
+    default-mysql-client \
+ && docker-php-ext-install pdo pdo_mysql
+
+# Instalar Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN echo "upload_max_filesize = 10M;" > /usr/local/etc/php/conf.d/upload.ini
+RUN echo "post_max_size = 10M;" >> /usr/local/etc/php/conf.d/upload.ini
+RUN echo "max_execution_time = 300;" >> /usr/local/etc/php/conf.d/upload.ini
+
+RUN chmod -R 777 /var/www .
+
+ARG DOCKER_GID
+ARG MY_GID
+
+RUN if [ -n "${DOCKER_GID}" ] && [ -n "${MY_GID}" ]; then \
+    echo "workspace:x:${DOCKER_GID}:${MY_GID}:,,,:/home/workspace:/bin/bash" >> /etc/passwd; \
+    fi
+
+
+WORKDIR /var/www
+
+CMD ["php-fpm"]
+
+EXPOSE 9000

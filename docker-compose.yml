@@ -1,0 +1,62 @@
+version: '3'
+
+services:
+  workspace:
+    build:
+      context: .
+      dockerfile: Dockerfile.workspace
+      args:
+        - DOCKER_UID=${DOCKER_UID}
+        - DOCKER_GID=${DOCKER_GID}
+    user: "${DOCKER_UID}:${DOCKER_GID}"
+    container_name: laravel_workspace
+    working_dir: /var/www
+    volumes:
+      - ./projects:/var/www
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx_server
+    ports:
+      - "80:80"
+    volumes:
+      - ./projects:/var/www
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - workspace
+    networks:
+      - app-network
+
+  mysql:
+    image: mysql:latest
+    container_name: mysql_db
+    environment:
+      MYSQL_USER: root
+      MYSQL_PASSWORD: secret
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin_container
+    environment:
+        PMA_HOST: mysql
+        UPLOAD_LIMIT: 10000000  # 10 MB
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - app-network
+
+volumes:
+  mysql_data:
+
+networks:
+  app-network:
+    driver: bridge
