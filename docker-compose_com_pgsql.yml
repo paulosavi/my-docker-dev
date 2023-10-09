@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  # Serviço Workspace com todas as ferramentas necessárias
+  # Serviço Workspace com todas as ferramentas necessárias 
   workspace:
     build:
       context: .
