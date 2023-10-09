@@ -6,6 +6,7 @@ sudo visudo
 ```
 
 ### 2. Adicionar a linha abaixo no final do arquivo
+Troque <user> pelo nome do seu usuário
 ``` bash
 <user> ALL=(ALL) NOPASSWD: ALL
 ```
