@@ -1,4 +1,4 @@
-## Configurações para rodar o docker em ambiente Linux
+## Configurações docker em ambiente Linux WSL
 
 ### 1. Alterar necessidade de password no docker
 ``` bash
